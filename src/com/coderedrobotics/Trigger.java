@@ -29,7 +29,7 @@ public class Trigger {
      */
     public boolean setState(boolean b) {
         if (b) {
-            disableTime = System.currentTimeMillis() + 280;
+            disableTime = System.currentTimeMillis() + 30;
         } else if (System.currentTimeMillis() < disableTime) {
             b = true;
         }

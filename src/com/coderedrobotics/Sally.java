@@ -20,7 +20,7 @@ public class Sally extends IterativeRobot {
     public static DashBoard dash;
     int autoStage = 0;
     int testStage = 0;
-    long testStartTime;
+    long startTime;
     private int pulse;
     private int pulseValue;
 
@@ -46,9 +46,10 @@ public class Sally extends IterativeRobot {
         shooter.gate.setState(false);
         autoStage = 0;
         compressor.start();
+        startTime = System.currentTimeMillis();
     }
 
-    public void autonomousPeriodic() {
+    public void autonomousPeriodic2() {
         switch (autoStage) {
             case 0:
                 if (shooter.fireIfReady()) {
@@ -79,10 +80,54 @@ public class Sally extends IterativeRobot {
                 if (!shooter.fireIfReady()) {
                     autoStage++;
                 }
+                break;
             case 6:
+                if (shooter.fireIfReady()) {
+                    autoStage++;
+                }
+                break;
+            case 7:
+                if (!shooter.fireIfReady()) {
+                    autoStage++;
+                }
+                break;
+            case 8:
+                if (shooter.fireIfReady()) {
+                    autoStage++;
+                }
+                break;
+            case 9:
+                if (!shooter.fireIfReady()) {
+                    autoStage++;
+                }
+            case 10:
                 shooter.trigger.setState(false);
                 shooter.launcher.disable();
                 break;
+        }
+    }
+
+    public void autonomousPeriodic() {
+        long time = System.currentTimeMillis() - startTime;
+        if (time < 6000) {
+            shooter.trigger.setState(false);
+        } else if (time < 6500) {
+            shooter.trigger.setState(true);
+        } else if (time < 8000) {
+            shooter.trigger.setState(false);
+        } else if (time < 8500) {
+            shooter.trigger.setState(true);
+        } else if (time < 10000) {
+            shooter.trigger.setState(false);
+        } else if (time < 10500) {
+            shooter.trigger.setState(true);
+        } else if (time < 12000) {
+            shooter.trigger.setState(false);
+        } else if (time < 12500) {
+            shooter.trigger.setState(true);
+        } else {
+            shooter.trigger.setState(false);
+            shooter.launcher.disable();
         }
     }
 
@@ -117,15 +162,9 @@ public class Sally extends IterativeRobot {
             }
         }
 
-        if (keyMap.getLauncherSpeedIncreaseButton()) {
-            shooter.launcher.setSpeedRelative(-0.2);
-        }
+        shooter.launcher.setSpeedRelative(keyMap.getLauncherSpeedChange());
 
-        if (keyMap.getLauncherSpeedDeincreaseButton()) {
-            shooter.launcher.setSpeedRelative(0.2);
-        }
-
-        shooter.elevation.setRelative((int) (keyMap.getElevationAxis() * 50));
+        shooter.elevation.setRelative((int) (keyMap.getElevationAxis() * 1000));
 
         if (keyMap.getLauncherToggleButton()) {
             if (shooter.launcher.isEnabled()) {
@@ -184,7 +223,7 @@ public class Sally extends IterativeRobot {
             shooter.applyPreset(Shooter.AUTON);
         }
         if (keyMap.getFull3ptPresetButton()) {//right trigger
-            shooter.applyPreset(Shooter.FULL_3PT_SHOT);
+            shooter.applyPreset(Shooter.FULL_2PT_SHOT_ALT);///////////////////////////////////////
         }
         if (keyMap.getElevationResetButton()) {
             shooter.elevation.reset();
@@ -193,13 +232,13 @@ public class Sally extends IterativeRobot {
 
     public void testInit() {
         testStage = 0;
-        testStartTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         shooter.elevation.reset();
         compressor.stop();
     }
 
     public void testPeriodic() {
-        long time = System.currentTimeMillis() - testStartTime;
+        long time = System.currentTimeMillis() - startTime;
         if (time < 5000) {
             //elevation reset
         } else if (time < 10000) {

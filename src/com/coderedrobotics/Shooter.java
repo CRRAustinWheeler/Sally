@@ -15,8 +15,10 @@ public class Shooter {
     private boolean readyLastTime = false;
     public static final Preset FULL_2PT_SHOT =
             new Preset(-20056, 11.2, 14, 0.4, 1.4, false);
+    public static final Preset FULL_2PT_SHOT_ALT =
+            new Preset(-20056, 22, 22, 5, 0, false);
     public static final Preset HALF_3PT_SHOT =
-            new Preset(-29000, 0, 0, 0, 0, true);
+            new Preset(0, 0, 0, 0, 0, true);
     public static final Preset FRONT_PYRAMID_3PT_SHOT =
             new Preset(0, 10, 10, 0, 0, true);
     public static final Preset AUTON =
@@ -49,7 +51,6 @@ public class Shooter {
     public void applyPreset(Preset preset) {
         elevation.set(preset.elevation);
         launcher.setSpeedIndependent(preset.first, preset.second);
-        launcher.setNoramlPD(preset.np, preset.nd);
     }
 
     public static class Preset {

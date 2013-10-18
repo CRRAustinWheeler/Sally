@@ -4,6 +4,7 @@ import com.coderedrobotics.libs.Gamepad;
 import com.coderedrobotics.libs.GenericJoystick;
 import com.coderedrobotics.libs.GenericJoystick.ButtonState;
 import com.coderedrobotics.libs.SaitekJoystick;
+import com.sun.squawk.util.MathUtils;
 
 /**
  *
@@ -61,8 +62,9 @@ public class KeyMap {
     }
 
     public boolean getFireButton() {
-        return gamepad1.button(Gamepad.BUMPER_RIGHT)
-                || gamepad3.button(SaitekJoystick.TRIGGER);
+        return false;
+//        return gamepad1.button(Gamepad.BUMPER_RIGHT)
+//                || gamepad3.button(SaitekJoystick.TRIGGER);
     }
 
     public boolean getFireOverideButton() {
@@ -122,13 +124,9 @@ public class KeyMap {
     public boolean getAutonPresetButton() {
         return gamepad2.button(Gamepad.BUMPER_LEFT);
     }
-
-    public boolean getLauncherSpeedIncreaseButton() {
-        return gamepad2.buttonPressed(Gamepad.STICK_RIGHT_UP, launcherSpeedIncreaseButtonState);
-    }
-
-    public boolean getLauncherSpeedDeincreaseButton() {
-        return gamepad2.buttonPressed(Gamepad.STICK_RIGHT_DOWN, launcherSpeedDeincreaseButtonState);
+    
+    public double getLauncherSpeedChange() {
+        return -MathUtils.pow(gamepad2.axis(Gamepad.STICK_RIGHT_Y), 3)*0.03;
     }
 
     public boolean getElevationIncreaseButton() {
@@ -140,7 +138,7 @@ public class KeyMap {
     }
 
     public double getElevationAxis() {
-        return gamepad2.axis(Gamepad.STICK_LEFT_Y);
+        return MathUtils.pow(gamepad2.axis(Gamepad.STICK_LEFT_Y), 5);
     }
 
     public double getFeederAxis() {

@@ -26,8 +26,6 @@ public class Launcher implements Runnable {
     private SpeedEncoderShell firstEncoder, secondEncoder;
     private PIDIntegralCalculator firstPIDIC, secondPIDIC;
     private DriverStationLCD ds;
-    private double normalP = 1.5;
-    private double normalD = 1.5;
     private Thread thread;
     private long time;
 
@@ -120,13 +118,6 @@ public class Launcher implements Runnable {
         return firstPID.isEnable();
     }
 
-    void setNoramlPD(double p, double d) {
-        normalP = p;
-        normalD = d;
-        firstPID.setPID(normalP, 0, normalD);
-        secondPID.setPID(normalP, 0, normalD);
-    }
-
     public void run() {
         while (true) {
             try {
@@ -161,12 +152,6 @@ public class Launcher implements Runnable {
                 Sally.dash.streamPacket(firstFilter.get(), "firstFilteredError");
                 Sally.dash.streamPacket(secondFilter.get(), "secondFilteredError");
                 Sally.dash.streamPacket(0.12 + Sally.dash.getRegister("shooterThreshold"), "threshold");
-                firstPID.setPID(
-                        normalP + Sally.dash.getRegister("shooterPFudge"),
-                        0, normalD);
-                secondPID.setPID(
-                        normalP + Sally.dash.getRegister("shooterPFudge"),
-                        0, normalD);
             }
         }
     }
