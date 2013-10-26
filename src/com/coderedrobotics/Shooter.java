@@ -25,10 +25,10 @@ public class Shooter {
             new Preset(-46547, 9.6, 12.4, 0.4, 1.0, true);//1.5, 1.5
     public static final Preset FULL_3PT_SHOT =
             new Preset(0, 13.2, 13.4, 2.3, 0.8, true);
-    public static final Preset LOB =
-            new Preset(0, 10, 10, 0, 0, true);
     public static final Preset MIDDLE_AUTON =
             new Preset(-56672, 7.2, 10.0, 0.4, 1.0, true);//1.5, 1.5
+    public static final Preset NEW_FULL_3PT_SHOT =
+            new Preset(-23810, 14.2, 14.2, 0, 0, true);
 
     public Shooter() {
         gate = new Gate();

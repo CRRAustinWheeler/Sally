@@ -208,13 +208,10 @@ public class Sally extends IterativeRobot {
         monocle.setEnabled(keyMap.getMonocleToggleButtonState());
 
         if (keyMap.getHalf3ptPresetButton()) {//right bumper
-            shooter.applyPreset(Shooter.HALF_3PT_SHOT);
+            shooter.applyPreset(Shooter.NEW_FULL_3PT_SHOT);
         }
         if (keyMap.getAutonPresetButton()) {//left bumper
             shooter.applyPreset(Shooter.AUTON);
-        }
-        if (keyMap.getFull3ptPresetButton()) {//right trigger
-            shooter.applyPreset(Shooter.FULL_2PT_SHOT_ALT);///////////////////////////////////////
         }
         if (keyMap.getElevationResetButton()) {
             shooter.elevation.reset();
