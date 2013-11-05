@@ -37,6 +37,8 @@ public class KeyMap {
     private ButtonState gateState3 = Gamepad.newButtonState();
     private ButtonState feederButtonState = Gamepad.newButtonState();
     private ButtonState feederState = Gamepad.newButtonState();
+    private double oldValueDrive,oldValueRotation,oldValueStrafe;
+    private long oldTimeDrive,oldTimeRotation,oldTimeStrafe;
 
     //////////   Driver (GP 1 & 3)   //////////
     public boolean getLauncherToggleButton() {
@@ -77,16 +79,58 @@ public class KeyMap {
     }
 
     public double getStrafeAxis() {
+        double x = getStrafeAxisRaw();
+        long t = System.currentTimeMillis();
+        double result = x;
+        if (t != oldTimeStrafe) {
+            result += 300 * ((x - oldValueStrafe) / (t - oldTimeStrafe));
+        }
+        //result = Math.min(result, 1);
+        //result = Math.max(result, -1);
+        oldTimeStrafe = t;
+        oldValueStrafe = x;
+        return result;
+    }
+
+    public double getStrafeAxisRaw() {
         return gamepad1.axis(Gamepad.STICK_LEFT_X)
                 + gamepad3.axis(SaitekJoystick.X);
     }
 
     public double getRotationAxis() {
+        double x = getRotationAxisRaw();
+        long t = System.currentTimeMillis();
+        double result = x;
+        if (t != oldTimeRotation) {
+            result += 300 * ((x - oldValueRotation) / (t - oldTimeRotation));
+        }
+        //result = Math.min(result, 1);
+        //result = Math.max(result, -1);
+        oldTimeRotation = t;
+        oldValueRotation = x;
+        return result;
+    }
+
+    public double getRotationAxisRaw() {
         return gamepad1.axis(Gamepad.STICK_RIGHT_X)
                 + gamepad3.axis(SaitekJoystick.TWIST);
     }
 
     public double getDriveAxis() {
+        double x = getDriveAxisRaw();
+        long t = System.currentTimeMillis();
+        double result = x;
+        if (t != oldTimeDrive) {
+            result += 300 * ((x - oldValueDrive) / (t - oldTimeDrive));
+        }
+        //result = Math.min(result, 1);
+        //result = Math.max(result, -1);
+        oldTimeDrive = t;
+        oldValueDrive = x;
+        return result;
+    }
+
+    public double getDriveAxisRaw() {
         return gamepad1.axis(Gamepad.STICK_LEFT_Y)
                 + gamepad3.axis(SaitekJoystick.Y);
     }
@@ -124,9 +168,9 @@ public class KeyMap {
     public boolean getAutonPresetButton() {
         return gamepad2.button(Gamepad.BUMPER_LEFT);
     }
-    
+
     public double getLauncherSpeedChange() {
-        return -MathUtils.pow(gamepad2.axis(Gamepad.STICK_RIGHT_Y), 3)*0.03;
+        return -MathUtils.pow(gamepad2.axis(Gamepad.STICK_RIGHT_Y), 3) * 0.03;
     }
 
     public boolean getElevationIncreaseButton() {
