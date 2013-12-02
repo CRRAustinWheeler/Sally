@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.coderedrobotics.libs;
+package com.coderedrobotics.libs.HID;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -10,20 +10,20 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  * @author laptop
  */
-public class GenericJoystick {
+public class HID {
 
     Joystick joystick;
 
-    public GenericJoystick(int port) {
+    public HID(int port) {
         joystick = new Joystick(port);
     }
 
     public boolean button(Button button) {
+        if (button instanceof AxisButton) {
+            AxisButton axis = (AxisButton) button;
+            return axis(axis.axis) * (axis.direction ? 1 : -1) > 0.2;
+        }
         return joystick.getRawButton(button.button);
-    }
-
-    public boolean button(AxisButton axis) {
-        return axis(axis.axis) * (axis.direction ? 1 : -1) > 0.2;
     }
 
     public double axis(Axis axis) {
@@ -46,22 +46,8 @@ public class GenericJoystick {
         return result;
     }
 
-    public boolean buttonReleased(AxisButton axisButton, ButtonState state) {
-        boolean b = button(axisButton);
-        boolean result = !b && state.state;
-        state.state = b;
-        return result;
-    }
-
     public boolean buttonPressed(Button button, ButtonState state) {
         boolean b = button(button);
-        boolean result = b && !state.state;
-        state.state = b;
-        return result;
-    }
-
-    public boolean buttonPressed(AxisButton axisButton, ButtonState state) {
-        boolean b = button(axisButton);
         boolean result = b && !state.state;
         state.state = b;
         return result;
@@ -77,16 +63,6 @@ public class GenericJoystick {
         return toggleState.state;
     }
 
-    public boolean buttonToggled(
-            AxisButton axisButton,
-            ButtonState pressState,
-            ButtonState toggleState) {
-        if (buttonPressed(axisButton, pressState)) {
-            toggleState.state = !toggleState.state;
-        }
-        return toggleState.state;
-    }
-
     public static ButtonState newButtonState() {
         return new ButtonState();
     }
@@ -94,6 +70,9 @@ public class GenericJoystick {
     public static class Button {
 
         private int button;
+
+        protected Button(Axis axis, boolean direction) {
+        }//do not use this constructor
 
         Button(int button) {
             this.button = button;
@@ -115,12 +94,13 @@ public class GenericJoystick {
         }
     }
 
-    public static class AxisButton {
+    public static class AxisButton extends Button {
 
         private Axis axis;
         private boolean direction;
 
         AxisButton(Axis axis, boolean direction) {
+            super(axis, direction);
             this.axis = axis;
             this.direction = direction;
         }
